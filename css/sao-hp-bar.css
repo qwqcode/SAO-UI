@@ -98,7 +98,7 @@ body {
   height: 25px;
 }
 
-.hp-value-cover {
+.hp-value-mask {
     position: absolute;
     z-index: 3;
     background: linear-gradient(rgba(74, 74, 74, 0.5), rgba(74, 74, 74, 0.24), rgba(74, 74, 74, 0));
