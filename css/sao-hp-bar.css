@@ -1,12 +1,12 @@
 @font-face {
-  font-family: GothamNights;
-  src: url('../font/GothamNights.ttf');
+  font-family: SAOUI;
+  src: url('../font/SAOUI.otf');
 }
 
 body {
   color: #FFF;
   font-size: 26px;
-  font-family: "GothamNights";
+  font-family: "SAOUI";
   background-image: url(../img/bg.jpg);
   background-size: 100vw;
   background-repeat: no-repeat;
@@ -91,12 +91,15 @@ body {
   color: #FFF;
 }
 
-/* hp-value */
-.hp-value {
+/* hp-value-indicator */
+.hp-value-indicator {
   position: relative;
   width: 365px;
   height: 25px;
 }
+
+/* hp-value */
+.hp-value-group {}
 
 .hp-value-mask {
     position: absolute;
@@ -108,133 +111,100 @@ body {
     left: 0;
 }
 
-.hp-value-left {
+.hp-value-wrap.left {
   z-index: 2;
-  top: 0;
-  left: 0;
-  width: 55%;
-  height: 25px;
-  position: absolute;
-  background: #84de1c;
-}
-
-.hp-value-left-sloping {
-  z-index: 2;
-  top: 0;
-  left: 55%;
-  width: 5%;
-  height: 25px;
+  top: 4px;
+  left: 4px;
+  width: calc(60% - 5px);
+  height: 21px;
   position: absolute;
   overflow: hidden;
 }
 
-.hp-value-left-sloping-inner {
+.hp-value-wrap.left > .inner {
   height: 100%;
-  width: calc(100% + 31px);
-  margin-left: -30px;
+  width: calc(100% + 6px);
+  margin-left: -6px;
   transform: skewX(-30deg);
   background: #84de1c;
 }
 
-.hp-value-right {
+.hp-value-wrap.right {
   z-index: 2;
   top: 0;
-  left: 60%;
-  width: 35%;
-  height: 15px;
-  position: absolute;
-  background: #84de1c;
-}
-
-.hp-value-right-sloping {
-  z-index: 2;
-  top: 0;
-  left: 95%;
-  width: 5%;
+  left: calc(60% + -1px);
+  width: 38%;
   height: 15px;
   position: absolute;
   overflow: hidden;
 }
 
-.hp-value-right-sloping-inner {
+.hp-value-wrap.right .inner {
   height: 100%;
-  width: calc(5% + 38px);
-  margin-left: -30px;
+  width: calc(100% + 10px);
+  margin-left: -10px;
   background: #84de1c;
   transform: skewX(-30deg);
 }
 
 /* hp-border */
-.hp-border {
+.hp-border-group {
   width: 100%;
   height: 30px;
 }
 
-.hp-border > div {
+.hp-border-wrap {
   position: absolute;
   top: 0;
   z-index: 4;
 }
 
-.hp-border-left {
+.hp-border-wrap > .inner {
+  border: 2px solid #d5d628;
+  border-right-width: 3px;
+}
+
+.hp-border-wrap.left {
   left: 0;
   height: 30px;
-  width: 57.3%;
+  width: 10px;
   overflow: hidden;
 }
 
-.hp-border-left-inner {
+.hp-border-wrap.left > .inner {
   height: 25px;
-  width: calc(100% + 20px);
-  border: 2px solid #d5d628;
-  box-shadow: inset 0 0px 8px 2px rgba(125, 125, 125, 0.61), inset 0 0px 0 2px rgba(0, 0, 0, 0.53);
+  width: 15px;
+  box-shadow: inset 0.3px 0px 0 2px rgba(0, 0, 0, 0.53);
 }
 
-.hp-border-left-sloping {
-  left: 57.3%;
+.hp-border-wrap.left-sloping {
+  left: 10px;
   height: 30px;
-  width: 2.7%;
+  width: calc(60% - 10px);
   overflow: hidden;
+  z-index: 5;
 }
 
-.hp-border-left-sloping-inner {
+.hp-border-wrap.left-sloping > .inner {
   height: 25px;
-  border: 2px solid #d5d628;
-  border-right-width: 2px;
-  box-shadow: inset 9px 0px 8px 2px rgba(125, 125, 125, 0.61), inset 0.3px 0px 0 2px rgba(0, 0, 0, 0.53);
   width: calc(100% + 32px);
   margin-left: -32.95px;
-  transform: skewX(-35deg);
-}
-
-.hp-border-right {
-  left: 60%;
-  height: 20px;
-  width: 36%;
-  overflow: hidden;
-}
-
-.hp-border-right-inner {
-  height: 14px;
-  border: 2px solid #d5d628;
-  box-shadow: inset 0 0px 8px 1.7px rgba(125, 125, 125, 0.61), inset 0 0px 0 2px rgba(0, 0, 0, 0.53);
-  width: calc(100% + 40px);
-  margin-left: -32px;
   transform: skewX(-30deg);
+  border-right-width: 1.5px;
+  box-shadow: inset 0.3px 0px 0 2px rgba(0, 0, 0, 0.53);
 }
 
-.hp-border-right-sloping {
-  left: 96%;
+.hp-border-wrap.right-sloping {
+  left: calc(60%);
   height: 20px;
-  width: 5%;
+  width: 40%;
   overflow: hidden;
 }
 
-.hp-border-right-sloping-inner {
+.hp-border-wrap.right-sloping > .inner {
   height: 14px;
-  border: 2px solid #d5d628;
   border-right-width: 2.5px;
-  box-shadow: inset 9px 0px 8px 2px rgba(125, 125, 125, 0.61), inset -0.4px 0px 0 2px rgba(0, 0, 0, 0.53);
+  box-shadow: inset -0.4px 0px 0 2px rgba(0, 0, 0, 0.53);
   width: calc(100% + 31px);
   margin-left: -41.6px;
   transform: skewX(-30deg);
@@ -246,7 +216,7 @@ body {
   right: -41px;
   transform: skewX(-30deg);
   height: 29px;
-  width: 35px;
+  width: 38px;
   background: #f3f315;
   z-index: 4;
   box-shadow: 0 0 3px #f3f315;

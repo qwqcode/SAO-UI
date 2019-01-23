@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SAO HP Bar Canvas</title>
+  <style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: #000;
+  }
+  </style>
+</head>
+<body>
+  <canvas></canvas>
+  <script>
+    (function () {
+      // 创建 Canvas
+      let canvas = document.querySelector('canvas');
+      var ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // 加载字体
+      (new FontFace('SAOUI', 'url(./font/SAOUI.otf)')).load().then((font) => {
+        document.fonts.add(font);
+      });
+
+      // 加载背景
+      let bg = new Image();
+			bg.src = "./img/[Kamigami]-Sword-Art-Online---11-[BDrip-1920x1080-x264-FLAC].mkv_20190123_235300.jpg";
+
+      // 加载图标
+      var flashIcon = new Image();
+      flashIcon.src = './img/flash.svg';
+      var addIcon = new Image();
+      addIcon.src = './img/add_box.svg';
+
+      // 页面加载完毕后执行
+      window.onload = function () {
+        ctx.fillStyle = ctx.createPattern(bg, "no-repeat"); // '#03A9F4';
+			  ctx.fillRect(0, 0, canvas.width, canvas.width/bg.width * bg.height);
+        create();
+      }
+
+      function create() {
+        const cW = canvas.width;
+        const cH = canvas.height;
+
+        const bgW1 = 270;
+        const bgW2 = 200;
+        const bgW = bgW1+bgW2;
+
+        const bgH1 = 60;
+        const bgH2 = 45;
+        const bgR = 6;
+
+        let x = cW - (bgW+40); // left X
+        const y = 10; // top Y
+
+        // for 放大
+        x -= 640;
+        ctx.scale(1.5, 1.5);
+
+        let bgColor = ctx.createLinearGradient(x, 0, x+bgW, 0);
+        bgColor.addColorStop(0, 'rgba(255, 255, 255, 0.40)');
+        bgColor.addColorStop(0.3, 'rgba(255, 255, 255, 0.40)');
+        bgColor.addColorStop(1, 'rgba(255, 255, 255, 0.06)');
+
+        // 特效指示器
+        (function () {
+          const seW = 27;
+          const seH = bgH1;
+          const seMarg = 3;
+          const seX = x-seW-seMarg;
+          const seY = y;
+
+          ctx.beginPath();
+          ctx.moveTo(seX, seY);
+          ctx.lineTo(seX+seW, seY);
+          ctx.lineTo(seX+seW, seY+seH);
+          ctx.lineTo(seX, seY+seH);
+          ctx.closePath();
+          ctx.fillStyle = bgColor;
+          ctx.fill();
+
+          let iconWH = 38;
+          ctx.drawImage(addIcon, seX-iconWH/2, seY+(seH-iconWH)/2, iconWH, iconWH)
+        })();
+
+        // 血量指示器
+        (function createIndicator() {
+          // bg
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x+bgW, y);
+          ctx.lineTo(x+bgW-25, y+bgH2);
+          ctx.lineTo(x+bgW1+bgR, y+bgH2);
+          ctx.arcTo(x+bgW1, y+bgH2, x+bgW1, y+bgH2+bgR, bgR);
+          ctx.lineTo(x+bgW1, y+bgH1);
+          ctx.lineTo(x, y+bgH1);
+          ctx.closePath();
+          ctx.fillStyle = bgColor;
+          ctx.fill();
+
+          // user name
+          const userNameW = 74;
+          putText('Kirito', x+userNameW/2, y+bgH1/2+2, 26);
+
+          // 指示器
+          const indiH1 = 20;
+          const indiH2 = 11;
+          const indiW1 = 192;
+          const indiW2 = 175;
+          const indiW = indiW1+indiW2;
+          const indiX = x+userNameW;
+          const indiY = y+((bgH1-indiH1)/2);
+
+          function drawIndi() {
+            ctx.beginPath();
+            ctx.moveTo(indiX, indiY);
+            ctx.lineTo(indiX+indiW, indiY);
+            ctx.lineTo(indiX+indiW-getSubX_ByFixedSlope(indiY, indiY+indiH2), indiY+indiH2); // K
+            ctx.lineTo(indiX+indiW1, indiY+indiH2); // E
+            ctx.lineTo(indiX+indiW1-getSubX_ByFixedSlope(indiY+indiH2, indiY+indiH1), indiY+indiH1);
+            ctx.lineTo(indiX, indiY+indiH1);
+            ctx.closePath();
+          }
+
+          // main
+          let indiColor = ctx.createLinearGradient(indiX, indiY, indiX+indiW, indiY+indiH1);
+          indiColor.addColorStop(0, '#96f117');
+          indiColor.addColorStop(0.2, '#94fb1e');
+          indiColor.addColorStop(0.3, '#95ef18');
+          indiColor.addColorStop(1, '#8dff0a');
+          drawIndi();
+          ctx.fillStyle = indiColor;
+          ctx.fill();
+
+          // mask
+          let indiMaskColor = ctx.createLinearGradient(indiX, indiY, indiX, indiY+indiH1);
+          indiMaskColor.addColorStop(0, 'rgba(0, 0, 0, 0.1)');
+          indiMaskColor.addColorStop(0.3, 'rgba(0, 0, 0, 0.09)');
+          indiMaskColor.addColorStop(0.7, 'rgba(0, 0, 0, 0)');
+          indiMaskColor.addColorStop(1, 'rgba(0, 0, 0, 0)');
+          drawIndi();
+          ctx.fillStyle = indiMaskColor;
+          ctx.fill();
+
+          function drawIndiWrap(o) {
+            ctx.beginPath();
+            ctx.moveTo(indiX -o, indiY -o);
+            ctx.lineTo(indiX+indiW +2*o, indiY -o);
+            ctx.lineTo(indiX+indiW +2*o -getSubX_ByFixedSlope(indiY -o, indiY+indiH2 +o), indiY+indiH2 +o); // K
+            ctx.lineTo(indiX+indiW1 +o, indiY+indiH2 +o); // E
+            ctx.lineTo(indiX+indiW1-getSubX_ByFixedSlope(indiY+indiH2 +o, indiY+indiH1 +o) +o, indiY+indiH1 +o);
+            ctx.lineTo(indiX -o, indiY+indiH1 +o);
+            ctx.closePath();
+          }
+
+          let fBf = ctx.filter;
+          let ljBf = ctx.lineJoin;
+          ctx.filter = 'blur(0.8px)';
+          ctx.lineJoin = 'round'
+          drawIndiWrap(2.7);
+          ctx.lineWidth = 2.7;
+          ctx.strokeStyle = 'rgba(255, 255, 60, 0.81)';
+          ctx.stroke();
+          ctx.filter = fBf;
+          ctx.lineJoin = ljBf;
+
+          drawIndiWrap(1.5);
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = '#FFF';
+          ctx.stroke();
+
+          drawIndiWrap(1);
+          ctx.lineWidth = 2.3;
+          ctx.strokeStyle = '#565653';
+          ctx.stroke();
+
+          // 状态标识
+          let statX = indiX+indiW+17;
+          let statY = y + 10;
+          let statW = 34;
+          let statH = 28;
+
+          ctx.beginPath();
+          ctx.moveTo(statX, statY);
+          ctx.lineTo(statX+statW, statY);
+          ctx.lineTo(statX+statW-getSubX_ByFixedSlope(29, 0), statY+statH);
+          ctx.lineTo(statX-getSubX_ByFixedSlope(29, 0), statY+statH);
+          ctx.closePath();
+          ctx.fillStyle = '#f3f315';
+          ctx.fill();
+
+          ctx.drawImage(flashIcon, statX, statY+4, 17, 20);
+        })();
+
+        // 资料块
+        (function createInfoBlock() {
+          const infoW = bgW2-15;
+          const infoW1 = infoW * 2/3;
+          const infoW2 = infoW * 1/3;
+          const infoH = 32;
+          const infoMg = 2;
+          const infoX = x+bgW1+infoMg;
+          const infoY = y+bgH2+infoMg;
+
+          // info 1
+          ctx.beginPath();
+          ctx.moveTo(infoX, infoY+bgR);
+          ctx.arcTo(infoX, infoY, infoX+bgR, infoY, bgR);
+          ctx.lineTo(infoX+infoW1, infoY);
+          ctx.lineTo(infoX+infoW1, infoY+infoH);
+          ctx.arcTo(infoX, infoY+infoH, infoX, infoY+infoH-bgR, bgR);
+          ctx.closePath();
+          ctx.fillStyle = bgColor;
+          ctx.fill();
+
+          // info 2
+          const infoX2 = infoX+infoW1+infoMg;
+          ctx.beginPath();
+          ctx.moveTo(infoX2, infoY);
+          ctx.lineTo(infoX2+infoW2-bgR, infoY);
+          ctx.arcTo(infoX2+infoW2, infoY, infoX2+infoW2, infoY+bgR, bgR);
+          ctx.arcTo(infoX2+infoW2, infoY+infoH, infoX2+infoW2-bgR, infoY+infoH, bgR);
+          ctx.lineTo(infoX2, infoY+infoH);
+          ctx.closePath();
+          ctx.fillStyle = bgColor;
+          ctx.fill();
+
+          // text
+          putText('26899  /  27200', infoX+infoW1/2, infoY+infoH/2)
+          putText('LV: 134', infoX2+infoW2/2, infoY+infoH/2)
+        })();
+
+        function putText(text, x, y, size, color) {
+          let f = ctx.font, s = ctx.fillStyle, a = ctx.textAlign, b = ctx.textBaseline;
+          ctx.font = `${size || 18}px SAOUI`;
+          ctx.fillStyle = color || '#FFF';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(text, x, y);
+          ctx.font = f;
+          ctx.fillStyle = s;
+          ctx.textAlign = a;
+          ctx.textBaseline = b;
+        }
+
+        function getSubX_ByFixedSlope(y1, y2) {
+          return (Math.abs(y1 - y2)*0.57);
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
