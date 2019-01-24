@@ -2,13 +2,13 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>SAO HP Bar Canvas</title>
   <style>
   body {
     margin: 0;
-    overflow: hidden;
+	width: 1920px;
+	height: 1080px;
     background: #000;
   }
   </style>
@@ -20,8 +20,8 @@
       // 创建 Canvas
       let canvas = document.querySelector('canvas');
       var ctx = canvas.getContext('2d');
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas.width = 1920; //window.innerWidth;
+      canvas.height = 1080; //window.innerHeight;
 
       // 加载字体
       (new FontFace('SAOUI', 'url(./font/SAOUI.otf)')).load().then((font) => {
